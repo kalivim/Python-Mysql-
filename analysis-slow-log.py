@@ -76,8 +76,8 @@ class AnalysisMysqlSlowLog:
             self.LibToolkit, slow_log_file, self.json_file)
 
     def check_argv_options(self):
-        get_toolkit = os.path.isfile(HtmlTemplate)
-        get_template = os.path.isfile(LibToolkit)
+        get_toolkit = os.path.isfile(LibToolkit)
+        get_template = os.path.isfile(HtmlTemplate)
         get_slow_log = os.path.isfile(self.slow_log_file)
         if not get_toolkit:
             res = RunAndCheckCommand('wget %s 2>/dev/null' % LibToolkit_url, '下载pt-query-digest工具')
