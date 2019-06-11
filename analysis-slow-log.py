@@ -76,8 +76,8 @@ class AnalysisMysqlSlowLog:
             self.LibToolkit, slow_log_file, self.json_file)
 
     def check_argv_options(self):
-        get_toolkit = os.path.isfile(HtmlTemplate)
-        get_template = os.path.isfile(LibToolkit)
+        get_toolkit = os.path.isfile(LibToolkit)
+        get_template = os.path.isfile(HtmlTemplate)
         get_slow_log = os.path.isfile(self.slow_log_file)
         if not get_toolkit:
             res = RunAndCheckCommand('wget %s 2>/dev/null' % LibToolkit_url, '下载pt-query-digest工具')
@@ -106,16 +106,20 @@ class AnalysisMysqlSlowLog:
         RunCommandsOBJ.exec_command_stdout_res()
         f = open(self.json_file, 'ra')
         format_dict_all_data = json.load(f)
-        have_slow_query_tables = []
+        
         all_sql_info = []
         all_slow_query_sql_info = format_dict_all_data['classes']
         global_sql_info = format_dict_all_data['global']
 
         for slow_query_sql in all_slow_query_sql_info:
+            have_slow_query_tables = []
             query_metrics = slow_query_sql['metrics']
             query_time = query_metrics['Query_time']
             query_tables = slow_query_sql['tables']
-
+            if 'tables' not in slow_query_sql:
+                print slow_query_sql
+                continue
+                
             for show_tables_sql in query_tables:
                 get_table_name = show_tables_sql['create'].split('.')[1]
                 table_name = re.match(r'`(\w*)`\\G', get_table_name).group(1)
